@@ -33,11 +33,7 @@
 		<cfargument name="value" type="boolean" required="true" />
 		<cfset instance.readEnter = arguments.value />
 	</cffunction>
-	
-	<cffunction name="markRead" access="public" returntype="string" output="false">
-		<cfset setReadEnter(true) />
-	</cffunction>
-	
+		
 	<cffunction name="getReadAfterFirst" access="public" returntype="string" output="false">
 		<cfreturn instance.readAfterFirst />
 	</cffunction>

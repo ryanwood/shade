@@ -3,11 +3,11 @@
 	<cfset instance = structNew() />
 	
 	<cffunction name="init" access="public" output="false">
-		<cfargument name="stateObject" required="true" />
+		<cfargument name="OriginalObject" required="true" />
 		<cfargument name="initialState" type="string" required="true" />
 		<cfargument name="stateMethod" type="string" required="false" default="state" />
 		<cfscript>
-			setStateObject(arguments.stateObject);
+			setOriginalObject(arguments.OriginalObject);
 			instance.states = structNew();
 			instance.transitionTable = structNew();
 			instance.eventTable = structNew();
@@ -50,13 +50,13 @@
 	
 	<!--- Holds a reference to the object that is being decorated --->
 	
-	<cffunction name="getStateObject" access="public" output="false">
-		<cfreturn instance.stateObject />
+	<cffunction name="getOriginalObject" access="public" output="false">
+		<cfreturn instance.OriginalObject />
 	</cffunction>
 	
-	<cffunction name="setStateObject" access="public" output="false">
+	<cffunction name="setOriginalObject" access="public" output="false">
 		<cfargument name="object" required="true" />	
-		<cfset instance.stateObject = arguments.object />
+		<cfset instance.OriginalObject = arguments.object />
 	</cffunction>
 	
 	<!--- Gets the current value of the state method from the decorated class --->
@@ -128,9 +128,16 @@
 		
 		<!--- 
 		Shortcut to wire up event methods, so basically if you have a 
-		'trash' event, you can call obj.trash rather than the longer fireEvent(event) --->
+		'trash' event, you can call obj.trash() rather than the longer obj.fireEvent('trash') --->
 		<cfif structKeyExists(instance.eventTable, arguments.missingMethodName)>
 			<cfreturn fireEvent(arguments.missingMethodName) />		
+		</cfif>
+		
+		<!--- Adds query methods. For and event 'trash', this will allow you to call isTrash() --->
+		<cfset stateList = structKeyList(instance.states, '|') />
+		
+		<cfif refindnocase('^is(#stateList#)$', arguments.missingMethodName)>
+			<cfreturn isInState(mid(arguments.missingMethodName, 3, len(arguments.missingMethodName)-2)) />		
 		</cfif>
 		
 		<!--- Passthrough to decorated object --->
@@ -147,7 +154,7 @@
     <cfset var returnVar = "" />             
 
 		<!--- runs cfinvoke on self to run an internal method ---> 
-		<cfinvoke component="#getStateObject()#" method="#arguments.method#" argumentcollection="#arguments.argcollection#" returnvariable="returnVar" />
+		<cfinvoke component="#getOriginalObject()#" method="#arguments.method#" argumentcollection="#arguments.argcollection#" returnvariable="returnVar" />
 		
 		<!--- returns the variables that cfinvoke work return --->
 		<!--- will only return a variables if one is present --->

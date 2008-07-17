@@ -27,7 +27,7 @@
 	<cffunction name="guard" returntype="boolean" access="public" output="false">
 		<cfargument name="obj" required="true" />
 		<cfset var result = true />
-		<cfset var decorated = obj.getStateObject() />
+		<cfset var decorated = obj.getOriginalObject() />
 		<cfif len(instance.guard) and structKeyExists(decorated, instance.guard)>
 			<cfinvoke component="#decorated#" method="#instance.guard#" returnvariable="result" />
 		</cfif>

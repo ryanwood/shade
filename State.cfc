@@ -36,7 +36,7 @@
 	
 	<cffunction name="entering" returntype="void" access="public" output="false">
 		<cfargument name="obj" required="true" />
-		<cfset invokeCallback('enter', arguments.obj) />
+		<cfset invokeCallback('#getName()#EnteringAction', arguments.obj) />
 	</cffunction>
 	
 	<cffunction name="entered" returntype="void" access="public" output="false">
@@ -52,9 +52,8 @@
 	<cffunction name="invokeCallback" returntype="void" access="public" output="false">
 		<cfargument name="callback" type="string" required="true" />
 		<cfargument name="obj" required="true" />		
-		<cfset var decorated = obj.getStateObject() />
-		<cfif structKeyExists(instance.callbacks, arguments.callback) and len(instance.callbacks[arguments.callback])>
-			<cfinvoke component="#decorated#" method="#instance.callbacks[arguments.callback]#" />
+		<cfif structKeyExists(arguments.obj, arguments.callback)>
+			<cfinvoke component="#arguments.obj#" method="#arguments.callback#" />
 		</cfif>
 	</cffunction>
 

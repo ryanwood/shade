@@ -15,7 +15,7 @@
 
 	<cffunction name="testInitialStateValue" returntype="void" access="public" output="false">
 		<cfscript>
-			assertEquals('needsAttention', conversationState.getInitialState());
+			assertEquals('needingAttention', conversationState.getInitialState());
 		</cfscript>
 	</cffunction>
 	
@@ -27,13 +27,13 @@
 	
 	<cffunction name="testInitialState" returntype="void" access="public" output="false">
 		<cfscript>
-			assertEquals('needsAttention', conversationState.getCurrentState());
+			assertEquals('needingAttention', conversationState.getCurrentState());
 		</cfscript>
 	</cffunction>
 	
 	<cffunction name="testStatesWereSet" returntype="void" access="public" output="false">
 		<cfscript>
-			var statesToCheck = "needsAttention,read,closed,awaitingResponse,junk";
+			var statesToCheck = "needingAttention,read,closed,awaitingResponse,junk";
 			var state = 0;
 			var i = 0;
 			var j = 0;
@@ -51,7 +51,7 @@
 			var newMessageTransitions = structFind(conversationState.getTransitionTable(), 'newMessage');
 			var i = 1;
 			var expected_from = ['read', 'closed', 'awaitingResponse'];			
-			var expected_to = 'needsAttention';
+			var expected_to = 'needingAttention';
 			
 			assertEquals(3, newMessageTransitions.count());
 			
@@ -64,15 +64,15 @@
 	
 	<cffunction name="testNextStateForEvent" returntype="void" access="public" output="false">
 		<cfscript>
-			//dump(conversationState.getNextStates())
 			assertEquals('read', conversationState.getNextStateForEvent('view'));
 		</cfscript>
 	</cffunction>
 	
 	<cffunction name="testChangeState" returntype="void" access="public" output="false">
 		<cfscript>
-			conversationState.fireEvent('view');
+			conversationState.view();
 			assertTrue(conversationState.isInState('read'));
+			assertTrue(conversationState.isRead());
 		</cfscript>
 	</cffunction>
 
@@ -108,7 +108,7 @@
 	<cffunction name="testEntryActionExecuted" returntype="void" access="public" output="false">
 		<cfscript>
 			conversationState.setReadEnter(false);
-			conversationState.fireEvent('view');
+			conversationState.view();
 			assertTrue(conversationState.getReadEnter());
 		</cfscript>
 	</cffunction>	
