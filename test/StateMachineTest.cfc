@@ -86,7 +86,7 @@
 		</cfscript>
 	</cffunction>
 	
-	<cffunction name="testCannotGoFromReadToClosedBecauseGuardPasses" returntype="void" access="public" output="false">
+	<cffunction name="testCannotGoFromReadToClosedBecauseGuardFails" returntype="void" access="public" output="false">
 		<cfscript>
 			conversation.setCanClose(false);
 			conversation.fireEvent('view');
@@ -177,6 +177,20 @@
 		<cfscript>
 			assertTrue(conversation.getNeedingAttentionEnter());
 			assertTrue(conversation.getNeedingAttentionAfter());
+		</cfscript>
+	</cffunction>
+	
+	<cffunction name="testCannotMakeAnInvalidTransition" returntype="void" access="public" output="false">
+		<cfscript>
+			// Try to junk a new message
+			conversation.junk();
+			assertFalse(conversation.isJunk());
+			
+			conversation.view();			
+			assertTrue(conversation.isRead());
+			
+			conversation.junk();			
+			assertTrue(conversation.isJunk());
 		</cfscript>
 	</cffunction>
 	
