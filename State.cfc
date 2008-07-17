@@ -41,12 +41,12 @@
 	
 	<cffunction name="entered" returntype="void" access="public" output="false">
 		<cfargument name="obj" required="true" />
-		<cfset invokeCallback('after', arguments.obj) />
+		<cfset invokeCallback('#getName()#AfterAction', arguments.obj) />
 	</cffunction>	
 	
 	<cffunction name="exited" returntype="void" access="public" output="false">
 		<cfargument name="obj" required="true" />
-		<cfset invokeCallback('exit', arguments.obj) />
+		<cfset invokeCallback('#getName()#ExitAction', arguments.obj) />
 	</cffunction>
 	
 	<cffunction name="invokeCallback" returntype="void" access="public" output="false">

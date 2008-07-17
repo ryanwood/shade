@@ -7,10 +7,8 @@
 		<cfreturn this />
 	</cffunction>
 		
-	<cffunction name="configure" access="private" returntype="void" output="false">
+	<cffunction name="configureState" access="private" returntype="void" output="false">
 		<cfscript>
-			var tmp = '';
-						
 			addState('needingAttention');	
 			addState('read');
 			addState('closed');
@@ -18,7 +16,6 @@
 			addState('junk');
 
 			addEvent('newMessage').addTransitions('read,closed,awaitingResponse', 'needingAttention');
-			//dump(getTransitionTable(), true);
 			addEvent('view').addTransitions('needingAttention,read', 'read');
 			addEvent('reply').addTransitions('read,closed', 'awaitingResponse');
 			addEvent('close').addTransitions('read,awaitingResponse', 'closed', 'getCanClose').addTransitions('read,awaitingResponse', 'read', 'alwaysTrue');
@@ -27,18 +24,31 @@
 		</cfscript>
 	</cffunction>
 	
-	<!--- Observer Events --->
+	<!--- State Observer Events --->
 	
 	<cffunction name="readEnteringAction" access="public" returntype="void" output="false">
 		<cfset getOriginalObject().setReadEnter(true) />
 	</cffunction>
 
+	<cffunction name="readExitAction" access="public" returntype="void" output="false">
+		<cfset getOriginalObject().setReadExit(true) />
+	</cffunction>
+	
+	<cffunction name="readAfterAction" access="public" returntype="void" output="false">
+		<cfset getOriginalObject().setReadAfterFirstAction(true) />
+		<cfset getOriginalObject().setReadAfterSecondAction(true) />
+	</cffunction>
+
 	<cffunction name="needingAttentionEnteringAction" access="public" returntype="void" output="false">
-		<cfset getOriginalObject().needingAttentionEnter(true) />
+		<cfset getOriginalObject().setNeedingAttentionEnter(true) />
 	</cffunction>
 	
 	<cffunction name="needingAttentionAfterAction" access="public" returntype="void" output="false">
-		<cfset getOriginalObject().needingAttentionAfter(true) />
+		<cfset getOriginalObject().setNeedingAttentionAfter(true) />
+	</cffunction>
+
+	<cffunction name="closedAfterAction" access="public" returntype="void" output="false">
+		<cfset getOriginalObject().setClosedAfter(true) />
 	</cffunction>
 
 </cfcomponent>

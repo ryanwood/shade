@@ -34,22 +34,22 @@
 		<cfset instance.readEnter = arguments.value />
 	</cffunction>
 		
-	<cffunction name="getReadAfterFirst" access="public" returntype="string" output="false">
-		<cfreturn instance.readAfterFirst />
+	<cffunction name="getReadAfterFirstAction" access="public" returntype="string" output="false">
+		<cfreturn instance.readAfterFirstAction />
 	</cffunction>
 	
-	<cffunction name="setReadAfterFirst" access="public" returntype="void" output="false">
+	<cffunction name="setReadAfterFirstAction" access="public" returntype="void" output="false">
 		<cfargument name="value" type="boolean" required="true" />
-		<cfset instance.readAfterFirst = arguments.value />
+		<cfset instance.readAfterFirstAction = arguments.value />
 	</cffunction>	
 	
-	<cffunction name="getReadAfterSecond" access="public" returntype="string" output="false">
-		<cfreturn instance.readAfterSecond />
+	<cffunction name="getReadAfterSecondAction" access="public" returntype="string" output="false">
+		<cfreturn instance.readAfterSecondAction />
 	</cffunction>
 	
-	<cffunction name="setReadAfterSecond" access="public" returntype="void" output="false">
+	<cffunction name="setReadAfterSecondAction" access="public" returntype="void" output="false">
 		<cfargument name="value" type="boolean" required="true" />
-		<cfset instance.readAfterSecond = arguments.value />
+		<cfset instance.readAfterSecondAction = arguments.value />
 	</cffunction>	
 	
 	<cffunction name="getClosedAfter" access="public" returntype="string" output="false">
@@ -59,6 +59,33 @@
 	<cffunction name="setClosedAfter" access="public" returntype="void" output="false">
 		<cfargument name="value" type="boolean" required="true" />
 		<cfset instance.closedAfter = arguments.value />
+	</cffunction>	
+	
+	<cffunction name="getNeedingAttentionEnter" access="public" returntype="string" output="false">
+		<cfreturn instance.NeedingAttentionEnter />
+	</cffunction>
+	
+	<cffunction name="setNeedingAttentionEnter" access="public" returntype="void" output="false">
+		<cfargument name="value" type="boolean" required="true" />
+		<cfset instance.NeedingAttentionEnter = arguments.value />
+	</cffunction>	
+	
+		<cffunction name="getNeedingAttentionAfter" access="public" returntype="string" output="false">
+		<cfreturn instance.NeedingAttentionAfter />
+	</cffunction>
+	
+	<cffunction name="setNeedingAttentionAfter" access="public" returntype="void" output="false">
+		<cfargument name="value" type="boolean" required="true" />
+		<cfset instance.NeedingAttentionAfter = arguments.value />
+	</cffunction>	
+	
+	<cffunction name="getReadExit" access="public" returntype="string" output="false">
+		<cfreturn instance.readExit />
+	</cffunction>
+	
+	<cffunction name="setReadExit" access="public" returntype="void" output="false">
+		<cfargument name="value" type="boolean" required="true" />
+		<cfset instance.readExit = arguments.value />
 	</cffunction>	
 
 </cfcomponent>

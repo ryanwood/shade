@@ -14,8 +14,8 @@
 			instance.stateMethod = arguments.stateMethod;			
 			instance.initialState = arguments.initialState;
 						
-			configure();
-			setState(instance.initialState);
+			configureState();
+			setInitialState(instance.initialState);
 						
 			return this;
 		</cfscript>
@@ -77,6 +77,18 @@
 	<cffunction name="getInitialState" access="public" returntype="string" output="false">
 		<cfreturn instance.initialState />
 	</cffunction>
+	
+	<!--- This should only be called once during init --->
+	<cffunction name="setInitialState" access="private" output="false">
+		<cfargument name="stateName" required="true" />
+		<cfscript>
+			var state = instance.states[arguments.stateName];
+			state.entering(this);
+			setState(arguments.stateName);
+			state.entered(this);
+		</cfscript>
+	</cffunction>
+	
 	
 	<cffunction name="getCurrentState" access="public" returntype="string" output="false">
 		<cfreturn invokeMethod("get#instance.stateMethod#") />
