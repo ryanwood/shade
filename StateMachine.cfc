@@ -83,9 +83,9 @@
 		<cfargument name="stateName" required="true" />
 		<cfscript>
 			var state = instance.states[arguments.stateName];
-			state.entering(this);
+			state.before(this);
 			setState(arguments.stateName);
-			state.entered(this);
+			state.after(this);
 		</cfscript>
 	</cffunction>
 	

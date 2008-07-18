@@ -10,51 +10,35 @@
 		<cfreturn this />
 	</cffunction>
 	
-	<!--- Set up chainable callback handlers --->
-	
-	<cffunction name="setEnterCallback" access="public" output="false">
-		<cfargument name="method" type="string" required="true" />			
-		<cfset instance.callbacks.enter = arguments.method />
-		<cfreturn this />
-	</cffunction>
-	
-	<cffunction name="setAfterCallback" access="public" output="false">
-		<cfargument name="method" type="string" required="true" />			
-		<cfset instance.callbacks.after = arguments.method />
-		<cfreturn this />
-	</cffunction>
-	
-	<cffunction name="setExitCallback" access="public" output="false">
-		<cfargument name="method" type="string" required="true" />			
-		<cfset instance.callbacks.exit = arguments.method />
-		<cfreturn this />
-	</cffunction>
-	
 	<cffunction name="getName" returntype="string" access="public" output="false">
 		<cfreturn instance.name />
 	</cffunction>
 	
-	<cffunction name="entering" returntype="void" access="public" output="false">
+	<cffunction name="before" returntype="boolean" access="public" output="false">
 		<cfargument name="obj" required="true" />
-		<cfset invokeCallback('#getName()#EnteringAction', arguments.obj) />
+		<cfreturn invokeCallback('before#getName()#Action', arguments.obj) />
 	</cffunction>
 	
-	<cffunction name="entered" returntype="void" access="public" output="false">
+	<cffunction name="after" returntype="void" access="public" output="false">
 		<cfargument name="obj" required="true" />
-		<cfset invokeCallback('#getName()#AfterAction', arguments.obj) />
+		<cfset invokeCallback('after#getName()#Action', arguments.obj) />
 	</cffunction>	
 	
-	<cffunction name="exited" returntype="void" access="public" output="false">
+	<cffunction name="exit" returntype="void" access="public" output="false">
 		<cfargument name="obj" required="true" />
-		<cfset invokeCallback('#getName()#ExitAction', arguments.obj) />
+		<cfset invokeCallback('exit#getName()#Action', arguments.obj) />
 	</cffunction>
 	
-	<cffunction name="invokeCallback" returntype="void" access="public" output="false">
+	<cffunction name="invokeCallback" returntype="boolean" access="public" output="false">
 		<cfargument name="callback" type="string" required="true" />
-		<cfargument name="obj" required="true" />		
+		<cfargument name="obj" required="true" />
 		<cfif structKeyExists(arguments.obj, arguments.callback)>
-			<cfinvoke component="#arguments.obj#" method="#arguments.callback#" />
+			<cfinvoke component="#arguments.obj#" method="#arguments.callback#" returnvariable="result" />
+			<cfif isDefined('result') and isBoolean(result)>
+				<cfreturn result />
+			</cfif> 
 		</cfif>
+		<cfreturn true />
 	</cffunction>
 
 </cfcomponent>

@@ -37,9 +37,10 @@
 		<cfloop condition="transitions.hasNext()">
 			<cfset transition = transitions.next() />
 			<cfif transition.perform(obj)>
-				<cfbreak />
+				<cfreturn true />
 			</cfif>
-		</cfloop>		
+		</cfloop>	
+		<cfreturn false />	
 	</cffunction>	
 	
 	<cffunction name="transitions" access="public" output="false">

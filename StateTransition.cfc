@@ -39,22 +39,23 @@
 		<cfscript>
 			var local = structNew();
 		
-			if(not guard(obj)) return false;
+			if(not guard(obj)) {
+				return false;
+			}
 		
 			local.isLoopback = obj.getCurrentState() eq getToState();
 			local.states = arguments.obj.getStates();
 			local.nextState = local.states[getToState()];
 			local.oldState = local.states[obj.getCurrentState()];
 			
-			if(not local.isLoopback) { 
-				local.nextState.entering(obj);	
-			}
-			
-			obj.setState(getToState());
-			
-			if(not local.isLoopback) { 
-				local.nextState.entered(obj);	
-				local.oldState.exited(obj);	
+			if(not local.isLoopback) {
+				if(local.nextState.before(obj)) {	
+					obj.setState(getToState());
+					local.nextState.after(obj);	
+					local.oldState.exit(obj);	
+				} else {
+				 return false;
+				}
 			}
 			
 			return true;

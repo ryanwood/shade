@@ -112,7 +112,7 @@
 			assertTrue(conversation.getReadEnter());
 		</cfscript>
 	</cffunction>	
-	
+
 	<cffunction name="testAfterActionsExecuted" returntype="void" access="public" output="false">
 		<cfscript>
 			conversation.setReadAfterFirstAction(false);
@@ -193,5 +193,23 @@
 			assertTrue(conversation.isJunk());
 		</cfscript>
 	</cffunction>
+
+	<cffunction name="testTransitionAbortedIfBeforeActionReturnsFalse" returntype="void" access="public" output="false">
+		<cfscript>
+			assertTrue(conversation.view());
+			assertTrue(conversation.isRead());
+			assertFalse(conversation.file());
+			assertTrue(conversation.isRead());
+		</cfscript>
+	</cffunction>	
+	
+	<cffunction name="testEventReturnsTrueWhenTransitionIsSuccessful" returntype="void" access="public" output="false">
+		<cfscript>
+			assertFalse(conversation.junk());
+			assertTrue(conversation.view());
+		</cfscript>
+	</cffunction>
+
+
 	
 </cfcomponent>

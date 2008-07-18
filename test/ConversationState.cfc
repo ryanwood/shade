@@ -13,6 +13,7 @@
 			addState('read');
 			addState('closed');
 			addState('awaitingResponse');
+			addState('filed');
 			addState('junk');
 
 			addEvent('newMessage').addTransitions('read,closed,awaitingResponse', 'needingAttention');
@@ -21,33 +22,39 @@
 			addEvent('close').addTransitions('read,awaitingResponse', 'closed', 'getCanClose').addTransitions('read,awaitingResponse', 'read', 'alwaysTrue');
 			addEvent('junk').addTransitions('read,closed,awaitingResponse', 'junk');
 			addEvent('unjunk').addTransitions('junk', 'closed');
+			addEvent('file').addTransitions('read,closed,awaitingResponse', 'filed');
 		</cfscript>
 	</cffunction>
 	
 	<!--- State Observer Events --->
 	
-	<cffunction name="readEnteringAction" access="public" returntype="void" output="false">
+	<cffunction name="beforeReadAction" access="public" returntype="void" output="false">
 		<cfset getOriginalObject().setReadEnter(true) />
 	</cffunction>
 
-	<cffunction name="readExitAction" access="public" returntype="void" output="false">
+	<cffunction name="beforeFiledAction" access="public" returntype="boolean" output="false">
+		<!--- Let's assume this event checked for the existence of a folder and failed  --->
+		<cfreturn false />
+	</cffunction>
+	
+	<cffunction name="exitReadAction" access="public" returntype="void" output="false">
 		<cfset getOriginalObject().setReadExit(true) />
 	</cffunction>
 	
-	<cffunction name="readAfterAction" access="public" returntype="void" output="false">
+	<cffunction name="afterReadAction" access="public" returntype="void" output="false">
 		<cfset getOriginalObject().setReadAfterFirstAction(true) />
 		<cfset getOriginalObject().setReadAfterSecondAction(true) />
 	</cffunction>
 
-	<cffunction name="needingAttentionEnteringAction" access="public" returntype="void" output="false">
+	<cffunction name="beforeNeedingAttentionAction" access="public" returntype="void" output="false">
 		<cfset getOriginalObject().setNeedingAttentionEnter(true) />
 	</cffunction>
 	
-	<cffunction name="needingAttentionAfterAction" access="public" returntype="void" output="false">
+	<cffunction name="afterNeedingAttentionAction" access="public" returntype="void" output="false">
 		<cfset getOriginalObject().setNeedingAttentionAfter(true) />
 	</cffunction>
 
-	<cffunction name="closedAfterAction" access="public" returntype="void" output="false">
+	<cffunction name="afterClosedAction" access="public" returntype="void" output="false">
 		<cfset getOriginalObject().setClosedAfter(true) />
 	</cffunction>
 
