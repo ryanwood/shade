@@ -37,10 +37,10 @@ unless it returns true. A guard is called on the original business object
 You can also define event callback methods in the decorator. The signature
 for those will be: 
 
-	[state]EnteringAction:  Fires just before you enter this state
-	[state]AfterAction:     Fires just after the state becomes current
-	[state]ExitAction:      Fires on the previous state just after the new
-													state becomes current (i.e. when you leave this state)
+	before[state]Action: Fires just before you enter this state
+	after[state]Action:  Fires just after the state becomes current
+	exit[state]Action:   Fires on the previous state just after the new
+											 state becomes current (i.e. when you leave this state)
 													
 
 === EXAMPLE ===
@@ -80,7 +80,7 @@ for those will be:
 		
 		<!--- Observers --->
 		
-		<cffunction name="closedEnteringAction" access="public" returntype="void" output="false">
+		<cffunction name="beforeClosedAction" access="public" returntype="void" output="false">
 			<!--- Perform some action such as sending a notification when an order is closed. --->
 			<cfmail ... />
 		</cffunction>
