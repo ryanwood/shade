@@ -25,14 +25,14 @@
 	
 	<cffunction name="addState" access="private" output="false">
 		<cfargument name="name" type="string" required="true" />
-		<cfset var state = createObject("component", "target.State").init(arguments.name) />
+		<cfset var state = createObject("component", "shade.State").init(arguments.name) />
 		<cfset instance.states[arguments.name] = state />
 		<cfreturn state />
 	</cffunction>
 	
 	<cffunction name="addEvent" access="private" output="false">
 		<cfargument name="name" type="string" required="true" />
-		<cfset var event = createObject("component", "target.Event").init(arguments.name, instance.transitionTable) />
+		<cfset var event = createObject("component", "shade.Event").init(arguments.name, instance.transitionTable) />
 		<cfset instance.eventTable[arguments.name] = event />
 		<cfreturn event />
 	</cffunction>

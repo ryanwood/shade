@@ -2,8 +2,8 @@
 
 	<cffunction name="setup" returntype="void" access="public">
 		<cfscript>
-			original = createObject("component", "target.test.Conversation").init();
-			conversation = createObject( "component", "target.test.ConversationState" ).init(original);
+			original = createObject("component", "shade.test.Conversation").init();
+			conversation = createObject( "component", "shade.test.ConversationState" ).init(original);
 		</cfscript>
 	</cffunction>
 	

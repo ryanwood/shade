@@ -1,4 +1,4 @@
-<cfcomponent displayname="StateTransitionCollection" extends="target.CollectionBase" output="false">
+<cfcomponent displayname="StateTransitionCollection" extends="shade.CollectionBase" output="false">
 	
 	<cffunction name="init" access="public" output="false">
 		<cfset super.init() />			
@@ -18,7 +18,7 @@
 	<cffunction name="getTransitionsFromState" access="public" output="false">
 		<cfargument name="state" type="string" required="true" />
 		<cfset var i = 1 />
-		<cfset var fromState = createObject("component", "target.StateTransitionCollection").init() />
+		<cfset var fromState = createObject("component", "shade.StateTransitionCollection").init() />
 		<cfset var transition = "" />
 		
 		<cfset reset() />

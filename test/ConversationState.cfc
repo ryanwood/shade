@@ -1,8 +1,8 @@
-<cfcomponent displayname="ConversationState" extends="target.StateMachine" output="false">
+<cfcomponent displayname="ConversationState" extends="shade.StateMachine" output="false">
 	<cfset instance = structNew() />
 	
 	<cffunction name="init" access="public" returntype="any" output="false">
-		<cfargument name="conversation" type="target.test.Conversation" required="true" />		
+		<cfargument name="conversation" type="shade.test.Conversation" required="true" />		
 		<cfset super.init(arguments.conversation, 'needingAttention', 'MyState') />
 		<cfreturn this />
 	</cffunction>

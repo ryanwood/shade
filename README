@@ -1,0 +1,101 @@
+=== INFO ===
+
+Shade is a state machine (or workflow) decorator for ColdFusion business objects.
+
+=== OVERVIEW ===
+
+You have a Order business object...
+
+You want to use it as a state machine (workflow), so you create a stateful 
+wrapper (call it what you wish) that extends shade.StateMachine. In it you
+need to define at least 2 methods: init() and defineStates(). See the example 
+below. 
+
+-- Defining States and Events --
+
+You add a state and events in the defineStates() method. You create a state
+by calling addState([name of state]). This will register a state for you
+object and create two methods available for use in you decorated object.
+
+For instance addState('closed') will create a close() method to fire the close 
+event and an isClosed() method to check if the object is in a closed state.
+
+There are 3 events that each state exposes: entering, after, and exit. See
+"Adding Event Callbacks" for more.
+
+You also add event here using the addEvent() method. An Event is anything
+that will cause you object to transition from one state to another. To make 
+an event actually do something, you need to add transitions to that event.
+The easiest way is to simply chain the addTransitions() method right to 
+addEvent(). A transition is a rule that defines 'from' states and a 'to' 
+state. It can also have a guard method that will prevent the transition 
+unless it returns true. A guard is called on the original business object 
+(not the decorated one).
+
+-- Adding Event Callbacks --
+
+You can also define event callback methods in the decorator. The signature
+for those will be: 
+
+	[state]EnteringAction:  Fires just before you enter this state
+	[state]AfterAction:     Fires just after the state becomes current
+	[state]ExitAction:      Fires on the previous state just after the new
+													state becomes current (i.e. when you leave this state)
+													
+
+=== EXAMPLE ===
+
+	<cfcomponent displayname="Order" extends="shade.StateMachine" output="false">
+		<cffunction name="getState" ...
+		<cffunction name="setState" ...
+	</cfcomponent>
+
+	<cfcomponent displayname="StatefulOrder" extends="shade.StateMachine" output="false">
+		<cfset instance = structNew() />
+		
+		<cffunction name="init" access="public" returntype="any" output="false">
+			<cfargument name="order" required="true" />
+			<!--- 
+			Call super passing the original business object and the initial state.
+			You can also pass the method to set the state in your business object (without 
+			the get/set in front of it). It defaults to 'State' which would them 
+			assume that you business object had getState() and setState() methods.
+			--->
+			<cfset super.init(arguments.order, 'new') />
+			<cfreturn this />
+		</cffunction>
+			
+		<cffunction name="configureState" access="private" returntype="void" output="false">
+			<cfscript>
+				addState('new');	
+				addState('open');
+				addState('closed');
+				addState('returned');
+	
+				addEvent('process').addTransitions('new', 'open');
+				addEvent('close').addTransitions('new,open', 'closed');
+				addEvent('return').addTransitions('closed', 'returned', 'canReturn');
+			</cfscript>
+		</cffunction>
+		
+		<!--- Observers --->
+		
+		<cffunction name="closedEnteringAction" access="public" returntype="void" output="false">
+			<!--- Perform some action such as sending a notification when an order is closed. --->
+			<cfmail ... />
+		</cffunction>
+	
+	</cfcomponent>
+
+
+=== USAGE ===
+
+<cfscript>
+	o = createObject("component", "Order").init();
+	order = createObject("component", "OrderState").init(o);
+	
+	order.process();
+	order.isOpen(); <!--- true --->
+	order.close();  <!--- notice is sent by mailer --->
+	order.return();
+</cfscript>

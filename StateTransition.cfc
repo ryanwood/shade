@@ -79,39 +79,4 @@
 		<cfset instance.from = arguments.from />
 	</cffunction>
 	
-<!---
-        class StateTransition
-          attr_reader :from, :to, :opts
-          
-          def initialize(opts)
-            @from, @to, @guard = opts[:from], opts[:to], opts[:guard]
-            @opts = opts
-          end
-          
-          def guard(obj)
-            @guard ? obj.send(:run_transition_action, @guard) : true
-          end
-
-          def perform(record)
-            return false unless guard(record)
-            loopback = record.current_state == to
-            states = record.class.read_inheritable_attribute(:states)
-            next_state = states[to]
-            old_state = states[record.current_state]
-          
-            next_state.entering(record) unless loopback
-          
-            record.update_attribute(record.class.state_column, to.to_s)
-          
-            next_state.entered(record) unless loopback
-            old_state.exited(record) unless loopback
-            true
-          end
-          
-          def ==(obj)
-            @from == obj.from && @to == obj.to
-          end
-        end
---->
-	
 </cfcomponent>
