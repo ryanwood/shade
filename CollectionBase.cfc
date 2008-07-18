@@ -53,7 +53,7 @@
 		<cfset instance.index = 1 />
 	</cffunction>
 	
-	<!--- IEnumerable Implementation --->
+	<!--- Iterator --->
 	
 	<cffunction name="next" access="public" output="false">
 		<cfif hasNext()>

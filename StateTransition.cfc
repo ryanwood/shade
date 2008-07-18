@@ -62,22 +62,12 @@
    	</cfscript>
 	</cffunction>	
 	
-	<cffunction name="isEqual" access="public" output="false">
-		<cfargument name="obj" required="true" />
-	</cffunction>
-	
-	
 	<cffunction name="getFromState" access="public" returntype="string" output="false">
 		<cfreturn instance.from />
 	</cffunction>
 	
 	<cffunction name="getToState" access="public" returntype="string" output="false">
 		<cfreturn instance.to />
-	</cffunction>
-	
-	<cffunction name="setFromState" access="public" returntype="void" output="false">
-		<cfargument name="From" type="string" required="true" />
-		<cfset instance.from = arguments.from />
 	</cffunction>
 	
 </cfcomponent>

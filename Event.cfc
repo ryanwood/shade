@@ -42,12 +42,7 @@
 		</cfloop>	
 		<cfreturn false />	
 	</cffunction>	
-	
-	<cffunction name="transitions" access="public" output="false">
-		<cfargument name="record" required="true" />
-	</cffunction>
-	
-	
+		
 	<cffunction name="getName" access="public" returntype="string" output="false">
 		<cfreturn instance.name />
 	</cffunction>

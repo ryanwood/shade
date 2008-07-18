@@ -79,6 +79,7 @@
 	</cffunction>
 	
 	<!--- This should only be called once during init --->
+	
 	<cffunction name="setInitialState" access="private" output="false">
 		<cfargument name="stateName" required="true" />
 		<cfscript>
@@ -87,8 +88,7 @@
 			setState(arguments.stateName);
 			state.after(this);
 		</cfscript>
-	</cffunction>
-	
+	</cffunction>	
 	
 	<cffunction name="getCurrentState" access="public" returntype="string" output="false">
 		<cfreturn invokeMethod("get#instance.stateMethod#") />
@@ -132,8 +132,14 @@
 		<cfreturn '' />
 	</cffunction>
 	
-	<!--- Some method twisting --->
+	<!--- 
+	We are using onMissingMethod for three things:
 	
+		1. To defined the state query handlers, i.e. isClosed()
+		2. To define the event firing shortcuts, i.e. close()
+		3. To pass any unknown method on to the decorated object to handle
+				
+	--->	
 	<cffunction name="onMissingMethod" output="false" access="public">
     <cfargument name="missingMethodName" type="string" />
     <cfargument name="missingMethodArguments" type="struct" />
@@ -159,7 +165,7 @@
 	
 	<!--- Utility --->
 	
-	<cffunction name="invokeMethod" access="public" returntype="Any" output="false">
+	<cffunction name="invokeMethod" access="private" returntype="Any" output="false">
 		<cfargument name="method" type="string" required="true" />
     <cfargument name="argcollection" type="struct" required="false" default="#structNew()#" />         
 

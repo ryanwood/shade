@@ -1,11 +1,11 @@
 <cfcomponent displayname="State" output="false">
-	<cfscript> instance = structNew(); </cfscript>
+	
+	<cfset instance = structNew() />
 	
 	<cffunction name="init" access="public" output="false">
 		<cfargument name="name" type="string" required="true" />
 		<cfscript>
 			instance.name = arguments.name;
-			instance.callbacks = structNew();
 		</cfscript>			
 		<cfreturn this />
 	</cffunction>
@@ -29,7 +29,7 @@
 		<cfset invokeCallback('exit#getName()#Action', arguments.obj) />
 	</cffunction>
 	
-	<cffunction name="invokeCallback" returntype="boolean" access="public" output="false">
+	<cffunction name="invokeCallback" returntype="boolean" access="private" output="false">
 		<cfargument name="callback" type="string" required="true" />
 		<cfargument name="obj" required="true" />
 		<cfif structKeyExists(arguments.obj, arguments.callback)>
