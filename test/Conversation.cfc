@@ -2,6 +2,7 @@
 	<cfset instance = structNew() />
 
 	<cffunction name="init" access="public" returntype="any" output="false" hint="">
+		<cfset instance.state = '' />
 		<cfreturn this />
 	</cffunction>
 		

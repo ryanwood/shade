@@ -50,7 +50,7 @@
 			
 			if(not local.isLoopback) {
 				if(local.nextState.before(obj)) {	
-					obj.setState(getToState());
+					obj.setInternalState(getToState());
 					local.nextState.after(obj);	
 					local.oldState.exit(obj);	
 				} else {

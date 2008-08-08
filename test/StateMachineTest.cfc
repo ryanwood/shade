@@ -210,6 +210,15 @@
 		</cfscript>
 	</cffunction>
 
-
+	<cffunction name="testCannotSetStateDirectly" returntype="void" access="public" output="false">
+		<cfscript>
+			try {
+				conversation.setMyState('new');
+				fail('Should not be able to set state directly.');
+			} catch( any e ) {
+				assertEquals( 'shade.InvalidStateChange', e.type );
+			}
+		</cfscript>
+	</cffunction>
 	
 </cfcomponent>

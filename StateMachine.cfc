@@ -15,7 +15,9 @@
 			instance.initialState = arguments.initialState;
 						
 			configureState();
-			setInitialState(instance.initialState);
+			if(getState() eq '') {
+				setInitialState(instance.initialState);
+			}
 						
 			return this;
 		</cfscript>
@@ -65,13 +67,13 @@
 		<cfreturn invokeMethod("get#instance.stateMethod#") />
 	</cffunction>
 	
-	<cffunction name="setState" access="public" output="false">
+	<cffunction name="setInternalState" access="public" output="false">
 		<cfargument name="state" type="string" required="true" />	
 		<cfset var local = structNew() />
 		<cfset local.state = arguments.state />
 		<cfset invokeMethod("set#instance.stateMethod#", local) />
 	</cffunction>
-
+	
 	<!--- Accessors --->
 	
 	<cffunction name="getInitialState" access="public" returntype="string" output="false">
@@ -85,7 +87,7 @@
 		<cfscript>
 			var state = instance.states[arguments.stateName];
 			state.before(this);
-			setState(arguments.stateName);
+			setInternalState(arguments.stateName);
 			state.after(this);
 		</cfscript>
 	</cffunction>	
@@ -137,16 +139,22 @@
 	
 		1. To defined the state query handlers, i.e. isClosed()
 		2. To define the event firing shortcuts, i.e. close()
-		3. To pass any unknown method on to the decorated object to handle
-				
+		3. To pass any unknown method on to the decorated object to handle				
 	--->	
 	<cffunction name="onMissingMethod" output="false" access="public">
     <cfargument name="missingMethodName" type="string" />
     <cfargument name="missingMethodArguments" type="struct" />
 		
-		<!--- 
-		Shortcut to wire up event methods, so basically if you have a 
-		'trash' event, you can call obj.trash() rather than the longer obj.fireEvent('trash') --->
+		<!--- This is to highly discourage the manual setting of state. 
+					It can still be done by getting the original object and 
+					setting it directly. BAD. --->
+		<cfif arguments.missingMethodName is "set#getStateMethod()#" >
+			<cfthrow type="shade.InvalidStateChange" message="You cannot set the state directly. Please call an event instead to change the state." />
+		</cfif>
+		
+		<!--- Shortcut to wire up event methods, so basically if you have a 
+					'trash' event, you can call obj.trash() rather than the longer 
+					obj.fireEvent('trash') --->
 		<cfif structKeyExists(instance.eventTable, arguments.missingMethodName)>
 			<cfreturn fireEvent(arguments.missingMethodName) />		
 		</cfif>
