@@ -57,5 +57,9 @@
 	<cffunction name="afterClosedAction" access="public" returntype="void" output="false">
 		<cfset getOriginalObject().setClosedAfter(true) />
 	</cffunction>
+	
+	<cffunction name="beforeAction" access="public" returntype="void" output="false">
+		<cfset getOriginalObject().incrementBeforeActionCount() />
+	</cffunction>
 
 </cfcomponent>

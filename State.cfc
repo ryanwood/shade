@@ -16,17 +16,20 @@
 	
 	<cffunction name="before" returntype="boolean" access="public" output="false">
 		<cfargument name="obj" required="true" />
+		<cfset invokeCallback('beforeAction', arguments.obj) />
 		<cfreturn invokeCallback('before#getName()#Action', arguments.obj) />
 	</cffunction>
 	
 	<cffunction name="after" returntype="void" access="public" output="false">
-		<cfargument name="obj" required="true" />
+		<cfargument name="obj" required="true" />		
 		<cfset invokeCallback('after#getName()#Action', arguments.obj) />
+		<cfset invokeCallback('afterAction', arguments.obj) />
 	</cffunction>	
 	
 	<cffunction name="exit" returntype="void" access="public" output="false">
 		<cfargument name="obj" required="true" />
 		<cfset invokeCallback('exit#getName()#Action', arguments.obj) />
+		<cfset invokeCallback('exitAction', arguments.obj) />
 	</cffunction>
 	
 	<cffunction name="invokeCallback" returntype="boolean" access="private" output="false">

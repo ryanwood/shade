@@ -3,6 +3,7 @@
 
 	<cffunction name="init" access="public" returntype="any" output="false" hint="">
 		<cfset instance.state = '' />
+		<cfset instance.beforeActionCount = 0 />
 		<cfreturn this />
 	</cffunction>
 		
@@ -87,6 +88,14 @@
 	<cffunction name="setReadExit" access="public" returntype="void" output="false">
 		<cfargument name="value" type="boolean" required="true" />
 		<cfset instance.readExit = arguments.value />
+	</cffunction>	
+	
+	<cffunction name="incrementBeforeActionCount" access="public" returntype="void" output="false">
+		<cfset instance.beforeActionCount = instance.beforeActionCount + 1 />
+	</cffunction>	
+	
+	<cffunction name="getBeforeActionCount" access="public" returntype="Numeric" output="false">
+		<cfreturn instance.beforeActionCount />
 	</cffunction>	
 
 </cfcomponent>

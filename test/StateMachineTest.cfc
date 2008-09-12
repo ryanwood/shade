@@ -221,4 +221,15 @@
 		</cfscript>
 	</cffunction>
 	
+	<cffunction name="testGlobalBeforeActionExecuted" returntype="void" access="public" output="false">
+		<cfscript>
+			// Should be 1 because it has to set the initial state
+			assertEquals(1, conversation.getBeforeActionCount());
+			conversation.view();
+			assertEquals(2, conversation.getBeforeActionCount());
+			conversation.reply();
+			assertEquals(3, conversation.getBeforeActionCount());
+		</cfscript>
+	</cffunction>
+	
 </cfcomponent>
