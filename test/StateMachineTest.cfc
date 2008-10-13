@@ -2,8 +2,8 @@
 
 	<cffunction name="setup" returntype="void" access="public">
 		<cfscript>
-			original = createObject("component", "shade.test.Conversation").init();
-			conversation = createObject( "component", "shade.test.ConversationState" ).init(original);
+			service = createObject("component", "shade.test.ConversationService").init();
+			conversation = service.new();
 		</cfscript>
 	</cffunction>
 	
@@ -72,10 +72,10 @@
 		<cfscript>
 			conversation.view();
 			assertTrue(conversation.isInState('read'));
-			assertTrue(conversation.isRead());
+			assertTrue(conversation.isRead());			
 		</cfscript>
 	</cffunction>
-
+	
 	<cffunction name="testCanGoFromReadToClosedBecauseGuardPasses" returntype="void" access="public" output="false">
 		<cfscript>
 			conversation.setCanClose(true);
@@ -155,13 +155,12 @@
 		<cfscript>
 			conversation.setReadExit(false);
 			conversation.view();
-			conversation.junk();
-			
+			conversation.junk();			
 			assertTrue(conversation.getReadExit());
 		</cfscript>
 	</cffunction>
 	
-	<cffunction name="testEntryAndExitNotRunOnLoopbackTransation" returntype="void" access="public" output="false">
+	<cffunction name="testEntryAndExitNotRunOnLoopbackTransition" returntype="void" access="public" output="false">
 		<cfscript>
 			conversation.view();
 			conversation.setReadEnter(false);
@@ -231,5 +230,33 @@
 			assertEquals(3, conversation.getBeforeActionCount());
 		</cfscript>
 	</cffunction>
+
+	<cffunction name="testRecordIsPersistedOnStateChange" returntype="void" access="public" output="false">
+		<cfscript>
+			assertFalse(service.recordSaved());
+			conversation.view();
+			assertTrue(service.recordSaved());
+			assertTrue(conversation.isRead());			
+		</cfscript>
+	</cffunction>	
 	
+	<cffunction name="testAfterAndExitNotRunOnPersistenceFailed" returntype="void" access="public" output="false">
+		<cfscript>
+			service.setSaveShouldFail(true);			
+			conversation.setReadAfterFirstAction(false);
+			assertFalse(conversation.view());
+			assertFalse(service.recordSaved());
+			assertFalse(conversation.getReadAfterFirstAction());
+		</cfscript>
+	</cffunction>
+
+	<cffunction name="testFailedActionExecuted" returntype="void" access="public" output="false">
+		<cfscript>
+			service.setSaveShouldFail(true);
+			conversation.setFailed(false);			
+			assertFalse(conversation.view());		
+			assertTrue(conversation.getFailed());
+		</cfscript>
+	</cffunction>
+		
 </cfcomponent>

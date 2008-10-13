@@ -2,8 +2,9 @@
 	<cfset instance = structNew() />
 	
 	<cffunction name="init" access="public" returntype="any" output="false">
-		<cfargument name="conversation" type="shade.test.Conversation" required="true" />		
-		<cfset super.init(arguments.conversation, 'needingAttention', 'MyState') />
+		<cfargument name="conversation" type="shade.test.Conversation" required="true" />
+		<cfargument name="persistenceObject" required="false" />	
+		<cfset super.init(arguments.conversation, 'needingAttention', 'MyState', arguments.persistenceObject, 'save') />
 		<cfreturn this />
 	</cffunction>
 		
@@ -60,6 +61,10 @@
 	
 	<cffunction name="beforeAction" access="public" returntype="void" output="false">
 		<cfset getOriginalObject().incrementBeforeActionCount() />
+	</cffunction>
+
+	<cffunction name="failedAction" access="public" returntype="void" output="false">
+		<cfset getOriginalObject().setFailed(true) />
 	</cffunction>
 
 </cfcomponent>

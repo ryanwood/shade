@@ -3,16 +3,20 @@
 	<cfset instance = structNew() />
 	
 	<cffunction name="init" access="public" output="false">
-		<cfargument name="OriginalObject" required="true" />
+		<cfargument name="originalObject" required="true" />
 		<cfargument name="initialState" type="string" required="true" />
 		<cfargument name="stateMethod" type="string" required="false" default="state" />
+		<cfargument name="persistenceObject" required="false" default="" hint="a service that persist the business object" />
+		<cfargument name="persistenceMethod" required="false" default="save" />
 		<cfscript>
 			setOriginalObject(arguments.OriginalObject);
 			instance.states = structNew();
 			instance.transitionTable = structNew();
 			instance.eventTable = structNew();
 			instance.stateMethod = arguments.stateMethod;			
-			instance.initialState = arguments.initialState;
+			instance.initialState = arguments.initialState;			
+			instance.persistenceObject = arguments.persistenceObject;
+			instance.persistenceMethod = arguments.persistenceMethod;
 						
 			configureState();
 			if(getState() eq '') {
@@ -44,7 +48,7 @@
 	<cffunction name="fireEvent" access="public" output="false">
 		<cfargument name="name" type="string" required="true" />
 		<cfif structKeyExists(instance.eventTable, arguments.name)>
-			<cfreturn instance.eventTable[arguments.name].fire(this) />
+			<cfreturn instance.eventTable[arguments.name].fire(this, instance.persistenceObject, instance.persistenceMethod) />
 		</cfif>
 		<cfreturn false />
 	</cffunction>

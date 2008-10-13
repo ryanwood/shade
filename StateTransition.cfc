@@ -1,4 +1,4 @@
-<cfcomponent displayname="Transition" output="false">
+<cfcomponent displayname="StateTransition" output="false">
 	
 	<cfset instance = structNew() />
 	
@@ -36,6 +36,9 @@
 	
 	<cffunction name="perform" access="public" output="false">
 		<cfargument name="obj" required="true" />
+		<cfargument name="persistenceObject" required="false" />
+		<cfargument name="persistenceMethod" required="false" default="save" />
+		
 		<cfscript>
 			var local = structNew();
 		
@@ -49,8 +52,16 @@
 			local.oldState = local.states[obj.getCurrentState()];
 			
 			if(not local.isLoopback) {
-				if(local.nextState.before(obj)) {	
+				if(local.nextState.before(obj)) {
+					// Set the state
 					obj.setInternalState(getToState());
+					// Do the update if we have an updater reference
+					if(structKeyExists(arguments, 'persistenceObject') and isObject(arguments.persistenceObject)) {
+						if(not persist(arguments.persistenceObject, arguments.persistenceMethod, obj)) {
+							local.nextState.fail(obj);
+							return false;
+						}
+					}
 					local.nextState.after(obj);	
 					local.oldState.exit(obj);	
 				} else {
@@ -69,5 +80,18 @@
 	<cffunction name="getToState" access="public" returntype="string" output="false">
 		<cfreturn instance.to />
 	</cffunction>
+
+	<cffunction name="persist" access="private" returntype="boolean" output="false">
+		<cfargument name="component" required="true" />
+		<cfargument name="method" required="true" />
+		<cfargument name="obj" required="true" />
+		<cfinvoke component="#arguments.component#" method="#arguments.method#" returnvariable="success">
+			<cfinvokeargument name="1" value="#arguments.obj#" />
+		</cfinvoke>
+		<!--- If the method returns void, assume it succeeded --->
+		<cfparam name="success" default="true" type="boolean" />
+		<cfreturn success />
+	</cffunction>	
+	
 	
 </cfcomponent>

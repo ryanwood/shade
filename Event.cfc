@@ -29,6 +29,8 @@
 	
 	<cffunction name="fire" access="public" output="false">
 		<cfargument name="obj" type="any" required="true" />
+		<cfargument name="persistenceObject" required="false" />
+		<cfargument name="persistenceMethod" required="false" />
 		<cfset var i = 1 />
 		<cfset var transitions = instance.transitions.getTransitionsFromState(arguments.obj.getCurrentState()) />
 		<cfset transition = 0 />
@@ -36,7 +38,7 @@
 		<cfset transitions.reset() />
 		<cfloop condition="transitions.hasNext()">
 			<cfset transition = transitions.next() />
-			<cfif transition.perform(obj)>
+			<cfif transition.perform(obj, arguments.persistenceObject, arguments.persistenceMethod)>
 				<cfreturn true />
 			</cfif>
 		</cfloop>	

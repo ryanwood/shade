@@ -19,6 +19,11 @@
 		<cfset invokeCallback('beforeAction', arguments.obj) />
 		<cfreturn invokeCallback('before#getName()#Action', arguments.obj) />
 	</cffunction>
+
+	<cffunction name="fail" returntype="void" access="public" output="false">
+		<cfargument name="obj" required="true" />
+		<cfset invokeCallback('failedAction', arguments.obj) />
+	</cffunction>
 	
 	<cffunction name="after" returntype="void" access="public" output="false">
 		<cfargument name="obj" required="true" />		
@@ -35,6 +40,7 @@
 	<cffunction name="invokeCallback" returntype="boolean" access="private" output="false">
 		<cfargument name="callback" type="string" required="true" />
 		<cfargument name="obj" required="true" />
+		<cftrace text="#callback#: #obj.getMyState()#" />
 		<cfif structKeyExists(arguments.obj, arguments.callback)>
 			<cfinvoke component="#arguments.obj#" method="#arguments.callback#" returnvariable="result" />
 			<cfif isDefined('result') and isBoolean(result)>

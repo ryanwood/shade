@@ -72,7 +72,7 @@
 		<cfset instance.NeedingAttentionEnter = arguments.value />
 	</cffunction>	
 	
-		<cffunction name="getNeedingAttentionAfter" access="public" returntype="string" output="false">
+	<cffunction name="getNeedingAttentionAfter" access="public" returntype="string" output="false">
 		<cfreturn instance.NeedingAttentionAfter />
 	</cffunction>
 	
@@ -97,5 +97,23 @@
 	<cffunction name="getBeforeActionCount" access="public" returntype="Numeric" output="false">
 		<cfreturn instance.beforeActionCount />
 	</cffunction>	
+	
+	<cffunction name="getFailed" access="public" returntype="boolean" output="false">
+		<cfreturn instance.Failed />
+	</cffunction>
+	
+	<cffunction name="setFailed" access="public" returntype="void" output="false">
+		<cfargument name="Failed" type="boolean" required="true" />
+		<cfset instance.Failed = arguments.Failed />
+	</cffunction>
+
+	<cffunction name="getFailedForAwaitingResponse" access="public" returntype="boolean" output="false">
+		<cfreturn instance.FailedForAwaitingResponse />
+	</cffunction>
+	
+	<cffunction name="setFailedForAwaitingResponse" access="public" returntype="void" output="false">
+		<cfargument name="FailedForAwaitingResponse" type="boolean" required="true" />
+		<cfset instance.FailedForAwaitingResponse = arguments.FailedForAwaitingResponse />
+	</cffunction>
 
 </cfcomponent>
