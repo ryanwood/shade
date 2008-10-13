@@ -41,7 +41,17 @@ for those will be:
 	after[state]Action:  Fires just after the state becomes current
 	exit[state]Action:   Fires on the previous state just after the new
 											 state becomes current (i.e. when you leave this state)
-													
+
+-- Persistence --
+
+Without specifying a persistence object (service layer), the state property
+is updated but not persisted to the database. Obviously, this has a limiting
+effect on events. An after event will fire after the state is updated even 
+though it will not be changed in the database.
+
+To get the proper use of the event callbacks, you should pass in a persistence
+object which will be passed the the business object and is responsible for 
+saving it. 							
 
 === EXAMPLE ===
 
@@ -50,18 +60,30 @@ for those will be:
 		<cffunction name="setState" ...
 	</cfcomponent>
 
+	<!--- This is optional, but needed for persistence --->
+	<cfcomponent displayname="OrderService" extends="shade.StateMachine" output="false">
+		<cffunction name="save">
+			<cfarguments name="order" ...
+		 	...perform the save
+		</cffunction>
+	</cfcomponent>
+
 	<cfcomponent displayname="StatefulOrder" extends="shade.StateMachine" output="false">
 		<cfset instance = structNew() />
 		
 		<cffunction name="init" access="public" returntype="any" output="false">
 			<cfargument name="order" required="true" />
+			<cfargument name="persistenceObject" required="false" />	
 			<!--- 
 			Call super passing the original business object and the initial state.
 			You can also pass the method to set the state in your business object (without 
 			the get/set in front of it). It defaults to 'State' which would them 
 			assume that you business object had getState() and setState() methods.
 			--->
-			<cfset super.init(arguments.order, 'new') />
+			<cfset super.init(arguments.order, 'new', 'State', arguments.persistenceObject, 'save') />
+			<!---
+			or <cfset super.init(arguments.order, 'new') /> if there is no persistence object 
+			--->
 			<cfreturn this />
 		</cffunction>
 			
