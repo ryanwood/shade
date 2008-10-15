@@ -40,7 +40,6 @@
 	<cffunction name="invokeCallback" returntype="boolean" access="private" output="false">
 		<cfargument name="callback" type="string" required="true" />
 		<cfargument name="obj" required="true" />
-		<cftrace text="#callback#: #obj.getMyState()#" />
 		<cfif structKeyExists(arguments.obj, arguments.callback)>
 			<cfinvoke component="#arguments.obj#" method="#arguments.callback#" returnvariable="result" />
 			<cfif isDefined('result') and isBoolean(result)>
